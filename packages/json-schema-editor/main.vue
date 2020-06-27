@@ -5,7 +5,7 @@
           <div :style="{marginLeft:`${20*deep}px`}" class="ant-col-name-c">
             <a-button v-if="pickValue.type==='object'" type="link" :icon="hidden?'caret-right':'caret-down'" style="color:rgba(0,0,0,.65)" @click="hidden = !hidden"/>
             <span v-else style="width:32px;display:inline-block"></span>
-            <a-input :disabled="disabled" :value="pickKey" class="ant-col-name-input" @input="onInputName"/>
+            <a-input :disabled="disabled || root" :value="pickKey" class="ant-col-name-input" @input="onInputName"/>
           </div>
           <a-tooltip v-if="root">
             <span slot="title">全选</span>
@@ -46,10 +46,10 @@
         </a-col>
       </a-row>
       <template v-if="!hidden&&pickValue.properties && !isArray">
-        <json-schema-editor  v-for="(item,key,index) in pickValue.properties" :value="{[key]:item}" :parent="pickValue" :key="index" :deep="deep+1" class="children"/>
+        <json-schema-editor  v-for="(item,key,index) in pickValue.properties" :value="{[key]:item}" :parent="pickValue" :key="index" :deep="deep+1" :root="false" class="children"/>
       </template>
       <template v-if="isArray">
-        <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem class="children"/>
+        <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem :root="false" class="children"/>
       </template>
   </div>
 </template>
@@ -71,7 +71,10 @@ export default {
     ATooltip: Tooltip,
   },
   props:{
-    value: Object,
+    value: {
+      type: Object,
+      required:true
+    },
     disabled: { //name不可编辑，根节点name不可编辑,数组元素name不可编辑
       type: Boolean,
       default: false
@@ -86,7 +89,7 @@ export default {
     },
     root:{ //是否root节点
       type:Boolean,
-      default:false
+      default:true
     },
     parent: { //父节点
       type: Object,

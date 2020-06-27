@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <pre>{{tree}}</pre>
-      <json-schema-editor class="schema" :disabled="true" :value="tree" :root="true"/>
+      <json-schema-editor class="schema" :value="tree"/>
     </div>
   </div>
 </template>
