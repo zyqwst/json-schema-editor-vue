@@ -5,7 +5,7 @@
           <div :style="{marginLeft:`${20*deep}px`}" class="ant-col-name-c">
             <a-button v-if="pickValue.type==='object'" type="link" :icon="hidden?'caret-right':'caret-down'" style="color:rgba(0,0,0,.65)" @click="hidden = !hidden"/>
             <span v-else style="width:32px;display:inline-block"></span>
-            <a-input :disabled="disabled || root" :value="pickKey" class="ant-col-name-input" @input="onInputName"/>
+            <a-input :disabled="disabled || root" :value="pickKey" class="ant-col-name-input" @blur="onInputName"/>
           </div>
           <a-tooltip v-if="root">
             <span slot="title">全选</span>
@@ -56,7 +56,6 @@
 <script>
 import TYPE from './type/type'
 import { Row,Col,Button,Input, Icon,Checkbox,Select,Tooltip } from 'ant-design-vue'
-// import { clearAttr } from './util'
 export default {
   name:'JsonSchemaEditor',
   components: {
@@ -123,9 +122,6 @@ export default {
   methods: {
     onInputName(e){
       const val = e.target.value
-      console.info('input_name',this.pickKey, val,this.parent)
-      // this.$set(this.parent.properties,val,this.pickValue)
-      // this.$delete(this.parent.properties,this.pickKey)
       const p = {};
       for(let key in this.parent.properties){
         if(key != this.pickKey){
@@ -135,7 +131,6 @@ export default {
           delete this.parent.properties[key]
         }
       }
-      console.info(JSON.stringify(p))
       this.$set(this.parent,'properties',p)
     },
     onChangeType() {
@@ -157,7 +152,6 @@ export default {
         checked ? this.$set(node,'required',Object.keys(node.properties)) : this.$delete(node,'required')
         Object.keys(node.properties).forEach(key => this._deepCheck(checked,node.properties[key]))
       } else if(node.type === 'array' && node.items.type === 'object'){
-        console.info("t1",node)
         checked ? this.$set(node.items,'required',Object.keys(node.items.properties)) : this.$delete(node.items,'required')
         Object.keys(node.items.properties).forEach(key => this._deepCheck(checked,node.items.properties[key]))
       }
@@ -211,7 +205,8 @@ export default {
          align-items: center;
        }
       .ant-col-name-required{
-        margin-left:6px;
+      flex:0 0 24px;
+      text-align:center;
       }
     }
     .ant-col-type{
