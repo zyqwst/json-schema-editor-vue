@@ -1,11 +1,17 @@
 {
   "name": "json-schema-editor-vue",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.1",
+  "author": "zhangyq",
+  "description": "A json-schema editor of high efficient and easy-to-use, base on Vue",
+  "keyword": "json schema vue",
+  "license": " Apache-2.0 License",
+  "main": "lib/json-schema-editor-vue.umd.min.js",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name json-schema-editor-vue --dest lib packages/index.js"
   },
   "dependencies": {
     "ant-design-vue": "^1.6.2",

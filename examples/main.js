@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import JsonSchemaEditor from '../packages/json-schema-editor/index'
+import JsonSchemaEditor from '../packages/index'
 // import { Row, Col, Input, Icon,Checkbox,Button,Select } from 'ant-design-vue'
 Vue.config.productionTip = false
 
