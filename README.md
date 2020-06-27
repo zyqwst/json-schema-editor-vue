@@ -1,24 +1,41 @@
 # json-schema-editor-vue
 
-## Project setup
+A json-schema editor of high efficient and easy-to-use, base on Vue
+### Usage
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+npm install json-schema-editor-vue
 ```
 
-### Compiles and minifies for production
 ```
-npm run build
+import JsonSchemaEditor from '../packages/index'
+Vue.use(JsonSchemaEditor)
+```
+```
+<template>
+  <div id="app">
+    ...
+    <json-schema-editor :value="tree"/>
+    ...
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
+      tree:
+      {
+        root: {
+          type: "object"
+        }
+      }
+    }
+  }
+}
+</script>
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+Don't forget to star if it helped!
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+如果对您有帮助，别忘记给个星哦
