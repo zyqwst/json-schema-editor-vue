@@ -6,11 +6,11 @@ A json-schema editor of high efficient and easy-to-use, base on Vue
 npm install json-schema-editor-vue
 ```
 
-```
+```vue
 import JsonSchemaEditor from '../packages/index'
 Vue.use(JsonSchemaEditor)
 ```
-```
+```vue
 <template>
   <div id="app">
     ...
