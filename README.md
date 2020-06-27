@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img width="60" src="https://github.com/zyqwst/json-schema-editor-vue/blob/master/examples/assets/logo.png">
+</p>
+
 # json-schema-editor-vue
 
 A json-schema editor of high efficient and easy-to-use, base on Vue
