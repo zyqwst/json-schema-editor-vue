@@ -56,7 +56,7 @@
 <script>
 import TYPE from './type/type'
 import { Row,Col,Button,Input, Icon,Checkbox,Select,Tooltip } from 'ant-design-vue'
-import { clearAttr } from './util'
+// import { clearAttr } from './util'
 export default {
   name:'JsonSchemaEditor',
   components: {
@@ -121,11 +121,22 @@ export default {
     }
   },
   methods: {
-    onInputName(){
-      clearAttr(this.value)
-    },
-    onInputTitle(event){
-      this.title = event.target.value
+    onInputName(e){
+      const val = e.target.value
+      console.info('input_name',this.pickKey, val,this.parent)
+      // this.$set(this.parent.properties,val,this.pickValue)
+      // this.$delete(this.parent.properties,this.pickKey)
+      const p = {};
+      for(let key in this.parent.properties){
+        if(key != this.pickKey){
+          p[key] = this.parent.properties[key]
+        }else{
+          p[val] = this.parent.properties[key]
+          delete this.parent.properties[key]
+        }
+      }
+      console.info(JSON.stringify(p))
+      this.$set(this.parent,'properties',p)
     },
     onChangeType() {
       this.$delete(this.pickValue,'properties')
