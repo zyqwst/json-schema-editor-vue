@@ -2,8 +2,7 @@
 <p align="center">
   <img width="60" src="https://github.com/zyqwst/json-schema-editor-vue/blob/master/examples/assets/logo.png">
 </p>
-<p align="center">json-schema-editor-vue</p>
-<hr/>
+<h1 align="center">json-schema-editor-vue</h1>
 <p align="center">A json-schema editor of high efficient and easy-to-use, base on Vue</p>
 <p align="center">
   <img width="100%" src="https://raw.githubusercontent.com/zyqwst/json-schema-editor-vue/master/examples/assets/capture.png">
