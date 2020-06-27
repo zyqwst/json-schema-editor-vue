@@ -1,22 +1,28 @@
 <template>
   <div id="app">
-    <json-schema-editor/>
+    <json-schema-editor :disabled="true" :value="tree" :root="true" style="width:600px"/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return {
+      tree:{
+        root: {
+          type: "object",
+          title: "title",
+          properties: {
+            field_1: {
+              type: "string"
+            },
+          },
+          required: ["field_1"]
+        }
+      }
+    }
+  }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
