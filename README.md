@@ -4,7 +4,9 @@
 </p>
 
 # json-schema-editor-vue
-
+<p align="center">
+  <img width="600" src="https://raw.githubusercontent.com/zyqwst/json-schema-editor-vue/master/examples/assets/capture.png">
+</p>
 A json-schema editor of high efficient and easy-to-use, base on Vue
 ### Usage
 ```
