@@ -2,11 +2,15 @@
 <p align="center">
   <img width="60" src="https://github.com/zyqwst/json-schema-editor-vue/blob/master/examples/assets/logo.png">
 </p>
+<p align="center">json-schema-editor-vue</p>
+<hr/>
+<p align="center">A json-schema editor of high efficient and easy-to-use, base on Vue</p>
+<p align="center">
+  <img width="100%" src="https://raw.githubusercontent.com/zyqwst/json-schema-editor-vue/master/examples/assets/capture.png">
+</p>
 
-# json-schema-editor-vue
-
-A json-schema editor of high efficient and easy-to-use, base on Vue
 ### Usage
+
 ```
 npm install json-schema-editor-vue
 ```
