@@ -1,5 +1,5 @@
 <template>
-  <div class="form-recursion">
+  <div class="json-schema-editor">
       <a-row class="row" :gutter="10">
         <a-col :span="8" class="ant-col-name">
           <div :style="{marginLeft:`${20*deep}px`}" class="ant-col-name-c">
@@ -7,8 +7,14 @@
             <span v-else style="width:32px;display:inline-block"></span>
             <a-input :disabled="disabled" :value="pickKey" class="ant-col-name-input" @input="onInputName"/>
           </div>
-          <a-checkbox v-if="root" :disabled="!isObject && !isArray"  class="ant-col-name-required" @change="onRootCheck"/>
-          <a-checkbox v-else :disabled="isItem" :checked="checked" class="ant-col-name-required" @change="onCheck"/>
+          <a-tooltip v-if="root">
+            <span slot="title">全选</span>
+            <a-checkbox :disabled="!isObject && !isArray"  class="ant-col-name-required" @change="onRootCheck"/>
+          </a-tooltip>
+          <a-tooltip v-else>
+            <span slot="title">是否必填</span>
+            <a-checkbox :disabled="isItem" :checked="checked" class="ant-col-name-required" @change="onCheck"/>
+          </a-tooltip>
         </a-col>
         <a-col :span="4">
           <a-select v-model="pickValue.type" class="ant-col-type" @change="onChangeType">
@@ -111,13 +117,9 @@ export default {
       countAdd: 1
     }
   },
-  mounted(){
-    console.info(this.value)
-  },
   methods: {
-    onInputName(event){
+    onInputName(){
       clearAttr(this.value)
-      console.info(event)
     },
     onInputTitle(event){
       this.title = event.target.value
@@ -137,10 +139,11 @@ export default {
      this._deepCheck(checked,this.pickValue)
     },
     _deepCheck(checked,node){
-      if(node.type === 'object'){
+      if(node.type === 'object' && node.properties){
         checked ? this.$set(node,'required',Object.keys(node.properties)) : this.$delete(node,'required')
         Object.keys(node.properties).forEach(key => this._deepCheck(checked,node.properties[key]))
-      } else if(node.type === 'array'){
+      } else if(node.type === 'array' && node.items.type === 'object'){
+        console.info("t1",node)
         checked ? this.$set(node.items,'required',Object.keys(node.items.properties)) : this.$delete(node.items,'required')
         Object.keys(node.items.properties).forEach(key => this._deepCheck(checked,node.items.properties[key]))
       }
@@ -156,6 +159,7 @@ export default {
         const pos = required.indexOf(this.pickKey)
         pos >=0 && required.splice(pos,1)
       }
+      required.length === 0 && this.$delete(parent,'required')
     },
     addChild(){
       const name = this._joinName()
@@ -164,11 +168,9 @@ export default {
       node.properties || this.$set(node,'properties',{})
       const props = node.properties
       this.$set(props,name,{type: type})
-      console.info(this.value)
     },
     removeNode(){
       const { properties,required } = this.parent 
-      console.info(properties,required)
       this.$delete(properties,this.pickKey)
       if(required){
         const pos = required.indexOf(this.pickKey)
@@ -183,8 +185,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.form-recursion{
-  width:100%;
+.json-schema-editor{
   .row{
     display: flex;
     margin:12px;

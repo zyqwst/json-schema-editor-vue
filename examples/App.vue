@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <json-schema-editor :disabled="true" :value="tree" :root="true" style="width:600px"/>
+    <div class="title">
+      Demo
+    </div>
+    <div class="container">
+      <pre>{{tree}}</pre>
+      <json-schema-editor class="schema" :disabled="true" :value="tree" :root="true"/>
+    </div>
   </div>
 </template>
 
@@ -9,20 +15,55 @@ export default {
   name: 'App',
   data() {
     return {
-      tree:{
+      tree:
+      {
         root: {
-          type: "object",
-          title: "title",
-          properties: {
-            field_1: {
-              type: "string"
-            },
-          },
-          required: ["field_1"]
+          type: "object"
         }
       }
     }
   }
 }
 </script>
-
+<style>
+*{
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+.title{
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  height:100px;
+  line-height: 100px;
+}
+.container{
+  display: flex;
+  padding:20px;
+  width:80vw;
+  min-width:800px;
+  justify-content:center;
+  height: calc(100vh - 100px);
+  margin:auto;
+}
+pre {
+  font-family: monospace;
+  height: 100%;
+  overflow-y: auto;
+  border:1px solid rgba(0,0,0,.1);
+  border-radius: 8px;
+  padding: 12px;
+  width:50%
+}
+.schema{
+  margin-left: 20px;
+  width:50%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x:hidden;
+  border:1px solid rgba(0,0,0,.1);
+  border-radius: 8px;
+  padding: 12px;
+}
+</style>
