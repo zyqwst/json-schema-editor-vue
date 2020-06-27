@@ -12,7 +12,7 @@
 
 ### Usage
 
-```
+```bash
 npm install json-schema-editor-vue
 ```
 
@@ -20,6 +20,7 @@ npm install json-schema-editor-vue
 import JsonSchemaEditor from '../packages/index'
 Vue.use(JsonSchemaEditor)
 ```
+
 ```vue
 <template>
   <div id="app">
