@@ -1,20 +1,25 @@
 const value = {
     description: null,
-    maxProperties: null,
-    minProperties: null
+    maxLength: null,
+    minLength: null,
+    pattern: null
 }
 const attr = {
     description: {
       name: '描述',
       type: 'string',
     },
-    maxProperties:{
-        name:'最大元素个数',
+    maxLength:{
+        name:'最大字符数',
         type:'integer'
     },
-    minProperties:{
-        name:'最小元素个数',
+    minLength:{
+        name:'最小字符数',
         type:'integer'
+    },
+    pattern: {
+        name: '正则表达式',
+        type:'string'
     }
 }
 const wrapper = {value, attr}

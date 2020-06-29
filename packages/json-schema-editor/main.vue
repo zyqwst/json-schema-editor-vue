@@ -17,8 +17,12 @@
           </a-tooltip>
         </a-col>
         <a-col :span="4">
-          <a-select v-model="pickValue.type" class="ant-col-type" @change="onChangeType">
-            <a-select-option :key="t" v-for="t in TYPE">
+          <a-select v-model="pickValue.type" class="ant-col-type" @change="onChangeType" :getPopupContainer="
+          triggerNode => {
+            return triggerNode.parentNode || document.body;
+          }"
+        >
+            <a-select-option :key="t" v-for="t in TYPE_NAME">
               {{t}}
             </a-select-option>
           </a-select>
@@ -29,7 +33,7 @@
         <a-col :span="6" class="ant-col-setting">
           <a-tooltip>
             <span slot="title">设置属性</span>
-            <a-button type="link" icon="setting" class="setting-icon"/>
+            <a-button type="link" icon="setting" class="setting-icon" @click="onSetting"/>
           </a-tooltip>
           <a-tooltip v-if="isObject">
             <span slot="title">添加子节点</span>
@@ -51,11 +55,25 @@
       <template v-if="isArray">
         <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem :root="false" class="children"/>
       </template>
+      <a-modal v-model="modalVisible" title="高级设置" :maskClosable="false" okText="确认" cancelText="取消" width="700px" @ok="handleOk" dialogClass="json-schema-editor-advanced-modal">
+        <h3>基础设置</h3>
+        <a-form-model :model="advancedValue" layout="inline">
+          <a-form-model-item :label="advancedAttr[key].name" v-for="(item,key) in advancedValue" :key="key">
+            <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'" :min="1"/>
+            <a-switch  v-else-if="advancedAttr[key].type === 'boolean'" v-model="advancedValue[key]" checked-children="是" un-checked-children="否" />
+            <a-input v-model="advancedValue[key]" allowClear v-else/>
+          </a-form-model-item>
+        </a-form-model>
+        <h3>预览</h3>
+        <pre style="width:100%">{{completeNodeValue}}</pre>
+      </a-modal>
   </div>
 </template>
 <script>
-import TYPE from './type/type'
-import { Row,Col,Button,Input, Icon,Checkbox,Select,Tooltip } from 'ant-design-vue'
+// eslint-disable-next-line no-unused-vars
+import { copyAttr, isNull } from './util'
+import {TYPE_NAME, TYPE} from './type/type'
+import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,FormModel,Switch} from 'ant-design-vue'
 export default {
   name:'JsonSchemaEditor',
   components: {
@@ -63,11 +81,15 @@ export default {
     AButton: Button,
     // eslint-disable-next-line vue/no-unused-components
     AIcon: Icon,
-    AInput: Input,
+    AInput: Input,AInputNumber:InputNumber,
     ACheckbox: Checkbox,
     ASelect: Select,
     ASelectOption:Select.Option,
     ATooltip: Tooltip,
+    AModal:Modal,
+    AFormModel:FormModel,
+    AFormModelItem: FormModel.Item,
+    ASwitch: Switch
   },
   props:{
     value: {
@@ -110,13 +132,31 @@ export default {
     },
     checked(){
       return this.parent && this.parent.required && this.parent.required.indexOf(this.pickKey) >= 0
+    },
+    advanced(){
+      return TYPE[this.pickValue.type]
+    },
+    advancedAttr(){
+      return TYPE[this.pickValue.type].attr
+    },
+    advancedNotEmptyValue(){
+      const jsonNode = Object.assign({},this.advancedValue);
+      for(let key in jsonNode){
+        isNull(jsonNode[key]) && delete jsonNode[key]
+      }
+      return jsonNode
+    },
+    completeNodeValue(){
+      return Object.assign({},this.pickValue,this.advancedNotEmptyValue)
     }
   },
   data(){
     return {
-      TYPE,
+      TYPE_NAME,
       hidden:false,
-      countAdd: 1
+      countAdd: 1,
+      modalVisible: false,
+      advancedValue:{}
     }
   },
   methods: {
@@ -188,6 +228,21 @@ export default {
     },
     _joinName(){
       return  `feild_${this.deep}_${this.countAdd++}`
+    },
+    onSetting(){
+      this.modalVisible = true
+      this.advancedValue = this.advanced.value
+    },
+
+    handleOk(){
+      this.modalVisible = false
+      for(let key in this.advancedValue){
+        if(isNull(this.advancedValue[key])){
+          this.$delete(this.pickValue,key)
+        }else {
+          this.$set(this.pickValue,key,this.advancedValue[key])
+        }
+      }
     }
   }
 }
@@ -225,5 +280,26 @@ export default {
       color:#E8684A
     }
   }
+  
 }
+</style>
+<style lang="less">
+.json-schema-editor-advanced-modal{
+    color: rgba(0,0,0,.65);
+    min-width:600px;
+    pre {
+      font-family: monospace;
+      height: 100%;
+      overflow-y: auto;
+      border:1px solid rgba(0,0,0,.1);
+      border-radius: 4px;
+      padding: 12px;
+      width:50%
+    }
+    h3{
+      display: block;
+      border-left: 3px solid #1890ff;
+      padding:0 8px;
+    }
+  }
 </style>

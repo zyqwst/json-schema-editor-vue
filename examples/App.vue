@@ -47,7 +47,7 @@ export default {
   height: calc(100vh - 100px);
   margin:auto;
 }
-pre {
+.container>pre {
   font-family: monospace;
   height: 100%;
   overflow-y: auto;
