@@ -175,6 +175,7 @@ export default {
     },
     onChangeType() {
       this.$delete(this.pickValue,'properties')
+      this.$delete(this.pickValue,'items')
       this.$delete(this.pickValue,'required')
       if(this.isArray){
         this.$set(this.pickValue,'items',{type:'string'})
