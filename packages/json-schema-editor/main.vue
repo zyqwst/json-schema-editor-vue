@@ -17,7 +17,7 @@
           </a-tooltip>
         </a-col>
         <a-col :span="4">
-          <a-select v-model="pickValue.type" class="ant-col-type" @change="onChangeType" :getPopupContainer="
+          <a-select v-model="pickValue.type" :disabled="disabledType" class="ant-col-type" @change="onChangeType" :getPopupContainer="
           triggerNode => {
             return triggerNode.parentNode || document.body;
           }"
@@ -59,8 +59,20 @@
         <h3>基础设置</h3>
         <a-form-model :model="advancedValue" layout="inline">
           <a-form-model-item :label="advancedAttr[key].name" v-for="(item,key) in advancedValue" :key="key">
-            <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'" :min="1"/>
+            <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'"/>
+            <a-input-number v-model="advancedValue[key]" v-else-if="advancedAttr[key].type === 'number'"/>
             <a-switch  v-else-if="advancedAttr[key].type === 'boolean'" v-model="advancedValue[key]" checked-children="是" un-checked-children="否" />
+            <a-select v-else-if="advancedAttr[key].type === 'array'" style="width:120px" v-model="advancedValue[key]" :getPopupContainer="
+            triggerNode => {
+              return triggerNode.parentNode || document.body;
+            }"
+            > 
+              <a-select-option value="">无</a-select-option>
+              <a-select-option :key="t" v-for="t in advancedAttr[key].enums">
+                {{t}}
+              </a-select-option>
+            </a-select>
+            
             <a-input v-model="advancedValue[key]" allowClear v-else/>
           </a-form-model-item>
         </a-form-model>
@@ -70,8 +82,7 @@
   </div>
 </template>
 <script>
-// eslint-disable-next-line no-unused-vars
-import { copyAttr, isNull } from './util'
+import { isNull } from './util'
 import {TYPE_NAME, TYPE} from './type/type'
 import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,FormModel,Switch} from 'ant-design-vue'
 export default {
@@ -97,6 +108,10 @@ export default {
       required:true
     },
     disabled: { //name不可编辑，根节点name不可编辑,数组元素name不可编辑
+      type: Boolean,
+      default: false
+    },
+    disabledType: { //禁用类型选择
       type: Boolean,
       default: false
     },
