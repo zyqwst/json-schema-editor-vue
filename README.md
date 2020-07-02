@@ -59,8 +59,8 @@ export default {
 |disabled|节点名称不可编辑|Boolean||`false`|
 |disabledType|节点类型不可选择|Boolean||`false`|
 |root|是否是根节点|Boolean||`true`|
-Don't forget to star if it helped!
 
+Don't forget to star if it helped!
 如果对您有帮助，别忘记给个星哦
 
 ### Links
