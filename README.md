@@ -5,7 +5,16 @@
 <h1 align="center">
   <a href="http://json-schema.sviip.com/" target="_blank">json-schema-editor-vue</a>
 </h1>
-<p align="center">A json-schema editor of high efficient and easy-to-use, base on Vue</p>
+
+
+
+[![GitHub open issues](https://img.shields.io/github/issues/zyqwst/json-schema-editor-vue.svg)](https://github.com/zyqwst/json-schema-editor-vue/issues?q=is%3Aopen+is%3Aissue)
+[![npm download](https://img.shields.io/npm/dt/json-schema-editor-vue.svg?maxAge=30)](https://www.npmjs.com/package/json-schema-editor-vue)
+[![npm download per month](https://img.shields.io/npm/dm/json-schema-editor-vue.svg)](https://www.npmjs.com/package/json-schema-editor-vue)
+[![npm version](https://img.shields.io/npm/v/json-schema-editor-vue.svg)](https://www.npmjs.com/package/json-schema-editor-vue)
+[![MIT License](https://img.shields.io/github/license/zyqwst/json-schema-editor-vue.svg)](https://github.com/zyqwst/json-schema-editor-vue/blob/master/LICENSE)
+
+A json-schema editor of high efficient and easy-to-use, base on Vue
 <p align="center">
   <img width="100%" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/capture.png">
 </p>
