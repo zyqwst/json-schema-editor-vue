@@ -288,12 +288,14 @@ export default {
     }
     .setting-icon{
       color:rgba(0,0,0,.45);
+      border:none
     }
     .plus-icon{
-      color:#5B8FF9;
+      border:none
     }
     .close-icon{
-      color:#E8684A
+      color:#888;
+      border:none
     }
   }
   
