@@ -31,7 +31,7 @@ npm install json-schema-editor-vue
 ```
 
 ```vue
-import JsonSchemaEditor from '../packages/index'
+import JsonSchemaEditor from 'json-schema-editor-vue'
 Vue.use(JsonSchemaEditor)
 ```
 
