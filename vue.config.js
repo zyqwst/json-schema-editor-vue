@@ -8,9 +8,6 @@ module.exports = {
             filename: 'index.html'
         }
     },
-    // chainWebpack: config => {
-    //     config.module.rule('js').include.add('/packages').end().use('babel').loader('babel-loader')
-    // },
     css: {
         loaderOptions: {
             less: {

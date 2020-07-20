@@ -1,6 +1,6 @@
 {
   "name": "json-schema-editor-vue",
-  "version": "1.1.0-beta.1",
+  "version": "1.1.0",
   "author": "zhangyq",
   "description": "A json-schema editor of high efficient and easy-to-use, base on Vue",
   "keywords": [
@@ -25,7 +25,7 @@
     "lib": "vue-cli-service build --target lib --name json-schema-editor-vue --dest lib packages/index.js"
   },
   "dependencies": {
-    "ant-design-vue": "^1.6.2",
+    "ant-design-vue": "^1.6.3",
     "core-js": "^3.6.5",
     "vue": "^2.6.11"
   },

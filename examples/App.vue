@@ -44,7 +44,7 @@ export default {
   width:80vw;
   min-width:800px;
   justify-content:center;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 150px);
   margin:auto;
 }
 .container>pre {
