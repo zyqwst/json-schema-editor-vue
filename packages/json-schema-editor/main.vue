@@ -248,6 +248,9 @@ export default {
     onSetting(){
       this.modalVisible = true
       this.advancedValue = this.advanced.value
+      for(const k in this.advancedValue) {
+        if(this.pickValue[k]) this.advancedValue[k] = this.pickValue[k]
+      }
     },
 
     handleOk(){
