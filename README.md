@@ -6,8 +6,8 @@
   <a href="http://json-schema.sviip.com/" target="_blank">json-schema-editor-vue</a>
 </h1>
 
-
-
+[![Start](https://img.shields.io/github/stars/zyqwst/json-schema-editor-vue?style=social)](https://github.com/zyqwst/json-schema-editor-vue/stargazers)
+[![Fork](https://img.shields.io/github/forks/zyqwst/json-schema-editor-vue?style=social)](https://github.com/zyqwst/json-schema-editor-vue/fork)
 [![GitHub open issues](https://img.shields.io/github/issues/zyqwst/json-schema-editor-vue.svg)](https://github.com/zyqwst/json-schema-editor-vue/issues?q=is%3Aopen+is%3Aissue)
 [![npm download](https://img.shields.io/npm/dt/json-schema-editor-vue.svg?maxAge=30)](https://www.npmjs.com/package/json-schema-editor-vue)
 [![npm download per month](https://img.shields.io/npm/dm/json-schema-editor-vue.svg)](https://www.npmjs.com/package/json-schema-editor-vue)
