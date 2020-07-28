@@ -55,27 +55,55 @@
       <template v-if="isArray">
         <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem :root="false" class="children"/>
       </template>
-      <a-modal v-model="modalVisible" title="高级设置" :maskClosable="false" okText="确认" cancelText="取消" width="700px" @ok="handleOk" dialogClass="json-schema-editor-advanced-modal">
+      <a-modal v-model="modalVisible" title="高级设置" :maskClosable="false" okText="确认" cancelText="取消" width="800px" @ok="handleOk" dialogClass="json-schema-editor-advanced-modal">
         <h3>基础设置</h3>
-        <a-form-model :model="advancedValue" layout="inline">
-          <a-form-model-item :label="advancedAttr[key].name" v-for="(item,key) in advancedValue" :key="key">
-            <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'"/>
-            <a-input-number v-model="advancedValue[key]" v-else-if="advancedAttr[key].type === 'number'"/>
-            <a-switch  v-else-if="advancedAttr[key].type === 'boolean'" v-model="advancedValue[key]" checked-children="是" un-checked-children="否" />
-            <a-select v-else-if="advancedAttr[key].type === 'array'" style="width:120px" v-model="advancedValue[key]" :getPopupContainer="
-            triggerNode => {
-              return triggerNode.parentNode || document.body;
-            }"
-            > 
-              <a-select-option value="">无</a-select-option>
-              <a-select-option :key="t" v-for="t in advancedAttr[key].enums">
-                {{t}}
-              </a-select-option>
-            </a-select>
-            
-            <a-input v-model="advancedValue[key]" allowClear v-else/>
-          </a-form-model-item>
-        </a-form-model>
+        <a-form v-model="advancedValue" class="ant-advanced-search-form">
+          <a-row :gutter="6">
+            <a-col :span="8" v-for="(item,key) in advancedValue" :key="key">
+              <a-form-item>
+                <a-tooltip :title="advancedAttr[key].name" slot="label">
+                  <span>{{ key }}</span>
+                </a-tooltip>
+                <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'" style="width:100%"/>
+                <a-input-number v-model="advancedValue[key]" v-else-if="advancedAttr[key].type === 'number'" style="width:100%"/>
+                <a-switch v-else-if="advancedAttr[key].type === 'boolean'" v-model="advancedValue[key]" checked-children="是" un-checked-children="否" />
+                <a-select v-else-if="advancedAttr[key].type === 'array'" v-model="advancedValue[key]" style="width:100%" :getPopupContainer="
+                triggerNode => {
+                  return triggerNode.parentNode || document.body;
+                }"
+                > 
+                  <a-select-option value="">无</a-select-option>
+                  <a-select-option :key="t" v-for="t in advancedAttr[key].enums">
+                    {{t}}
+                  </a-select-option>
+                </a-select>
+                
+                <a-input v-model="advancedValue[key]" v-else style="width:100%"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="6">
+            <a-col :span="8" v-for="item in customProps" :key="item.key">
+              <a-form-item :label="item.key">
+                <a-input v-model="item.value" style="width:100%"/>
+              </a-form-item>
+            </a-col>
+            <a-col :span="8" v-show="addProp.key != undefined">
+              <a-form-item>
+                <a-input slot="label" v-model="addProp.key" style="width:100px"/>
+                <a-input v-model="addProp.value" style="width:100%"/>
+              </a-form-item>
+            </a-col>
+            <a-col :span="8">
+              <a-form-item>
+                <a-tooltip title="添加自定义属性">
+                  <a-button icon="check" type="link" @click="confirmAddCustomNode" v-if="customing"></a-button>  
+                  <a-button icon="plus" type="link" @click="addCustomNode" v-else></a-button>  
+                </a-tooltip>
+              </a-form-item>
+            </a-col>
+          </a-row> 
+        </a-form>
         <h3>预览</h3>
         <pre style="width:100%">{{completeNodeValue}}</pre>
       </a-modal>
@@ -84,7 +112,7 @@
 <script>
 import { isNull } from './util'
 import {TYPE_NAME, TYPE} from './type/type'
-import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,FormModel,Switch} from 'ant-design-vue'
+import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,Form,Switch} from 'ant-design-vue'
 export default {
   name:'JsonSchemaEditor',
   components: {
@@ -98,8 +126,8 @@ export default {
     ASelectOption:Select.Option,
     ATooltip: Tooltip,
     AModal:Modal,
-    AFormModel:FormModel,
-    AFormModelItem: FormModel.Item,
+    AForm:Form,
+    AFormItem: Form.Item,
     ASwitch: Switch
   },
   props:{
@@ -162,7 +190,11 @@ export default {
       return jsonNode
     },
     completeNodeValue(){
-      return Object.assign({},this.pickValue,this.advancedNotEmptyValue)
+      const t = {}
+      for(const item of this.customProps){
+        t[item.key] = item.value
+      }
+      return Object.assign({},this.pickValue,this.advancedNotEmptyValue, t)
     }
   },
   data(){
@@ -171,7 +203,10 @@ export default {
       hidden:false,
       countAdd: 1,
       modalVisible: false,
-      advancedValue:{}
+      advancedValue:{},
+      addProp:{},// 自定义属性
+      customProps: [],
+      customing: false
     }
   },
   methods: {
@@ -233,6 +268,17 @@ export default {
       const props = node.properties
       this.$set(props,name,{type: type})
     },
+    addCustomNode(){
+      this.$set(this.addProp,'key',this._joinName())
+      this.$set(this.addProp,'value','')
+      this.customing = true
+    },
+    confirmAddCustomNode() {
+
+this.customProps.push(this.addProp)
+      this.addProp = {}
+      this.customing = false
+    },
     removeNode(){
       const { properties,required } = this.parent 
       this.$delete(properties,this.pickKey)
@@ -255,12 +301,15 @@ export default {
 
     handleOk(){
       this.modalVisible = false
-      for(let key in this.advancedValue){
+      for(const key in this.advancedValue){
         if(isNull(this.advancedValue[key])){
           this.$delete(this.pickValue,key)
         }else {
           this.$set(this.pickValue,key,this.advancedValue[key])
         }
+      }
+      for(const item of this.customProps){
+        this.$set(this.pickValue,item.key,item.value)
       }
     }
   }
@@ -322,5 +371,14 @@ export default {
       border-left: 3px solid #1890ff;
       padding:0 8px;
     }
+    .ant-advanced-search-form {
+      .ant-form-item {
+        display: flex;
+        .ant-form-item-control-wrapper {
+          flex: 1;
+        }
+      }
+    }
+
   }
 </style>
