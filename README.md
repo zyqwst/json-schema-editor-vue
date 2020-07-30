@@ -19,6 +19,10 @@ A json-schema editor of high efficient and easy-to-use, base on Vue
   <img width="100%" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/capture.png">
 </p>
 
+**支持自定义属性，满足特殊的需求**
+<p align="center">
+  <img width="100%" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/custom.png">
+</p>
 
 ### Example
 **Demo** [http://json-schema.sviip.com](http://json-schema.sviip.com) 
