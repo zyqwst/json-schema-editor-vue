@@ -14,7 +14,7 @@
 [![npm version](https://img.shields.io/npm/v/json-schema-editor-vue.svg)](https://www.npmjs.com/package/json-schema-editor-vue)
 [![MIT License](https://img.shields.io/github/license/zyqwst/json-schema-editor-vue.svg)](https://github.com/zyqwst/json-schema-editor-vue/blob/master/LICENSE)
 
-A json-schema editor of high efficient and easy-to-use, base on Vue
+A json-schema editor of high efficient and easy-to-use, base on Vue & ant-design-vue
 <p align="center">
   <img width="100%" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/capture.png">
 </p>
@@ -78,4 +78,7 @@ Don't forget to star if it helped!
 
 ### Links
 
-- [json-schema-editor-visual](https://github.com/YMFE/json-schema-editor-visual)
+- [json-schema-editor-visual](https://github.com/YMFE/json-schema-editor-visual) React 版本
+- [vue-json-schema-editor-visual](https://github.com/giscafer/vue-json-schema-editor-visual) Vue + Element UI 版本
+
+
