@@ -73,6 +73,8 @@ export default {
 |disabledType|节点类型不可选择|Boolean||`false`|
 |root|是否是根节点|Boolean||`true`|
 |custom|是否允许添加自定义属性|Boolean||`false`|
+
+
 Don't forget to star if it helped!
 如果对您有帮助，别忘记给个星哦
 
