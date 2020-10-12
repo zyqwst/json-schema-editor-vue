@@ -8,35 +8,39 @@
             <a-input :disabled="disabled || root" :value="pickKey" class="ant-col-name-input" @blur="onInputName"/>
           </div>
           <a-tooltip v-if="root">
-            <span slot="title">全选</span>
+            <span slot="title" v-text="local['checked_all']">全选</span>
             <a-checkbox :disabled="!isObject && !isArray"  class="ant-col-name-required" @change="onRootCheck"/>
           </a-tooltip>
           <a-tooltip v-else>
-            <span slot="title">是否必填</span>
+            <span slot="title" v-text="local['required']">是否必填</span>
             <a-checkbox :disabled="isItem" :checked="checked" class="ant-col-name-required" @change="onCheck"/>
           </a-tooltip>
         </a-col>
         <a-col :span="4">
-          <a-select v-model="pickValue.type" class="ant-col-type" @change="onChangeType">
-            <a-select-option :key="t" v-for="t in TYPE">
+          <a-select v-model="pickValue.type" :disabled="disabledType" class="ant-col-type" @change="onChangeType" :getPopupContainer="
+          triggerNode => {
+            return triggerNode.parentNode || document.body;
+          }"
+        >
+            <a-select-option :key="t" v-for="t in TYPE_NAME">
               {{t}}
             </a-select-option>
           </a-select>
         </a-col>
         <a-col>
-          <a-input v-model="pickValue.title" class="ant-col-title" placeholder="标题"/>
+          <a-input v-model="pickValue.title" class="ant-col-title" :placeholder="local['title']"/>
         </a-col>
         <a-col :span="6" class="ant-col-setting">
           <a-tooltip>
-            <span slot="title">设置属性</span>
-            <a-button type="link" icon="setting" class="setting-icon"/>
+            <span slot="title" v-text="local['adv_setting']">高级设置</span>
+            <a-button type="link" icon="setting" class="setting-icon" @click="onSetting"/>
           </a-tooltip>
           <a-tooltip v-if="isObject">
-            <span slot="title">添加子节点</span>
+            <span slot="title" v-text="local['add_child_node']">添加子节点</span>
             <a-button type="link" icon="plus" class="plus-icon" @click="addChild"/>
           </a-tooltip>
           <a-tooltip v-if="!root && !isItem">
-            <span slot="title">删除节点</span>
+            <span slot="title" v-text="local['remove_node']">删除节点</span>
             <a-button type="link" class="close-icon ant-btn-icon-only" @click="removeNode">
               <i aria-label="icon: plus" class="anticon anticon-plus">
               <svg viewBox="64 64 896 896" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class=""><path d="M810.666667 273.493333L750.506667 213.333333 512 451.84 273.493333 213.333333 213.333333 273.493333 451.84 512 213.333333 750.506667 273.493333 810.666667 512 572.16 750.506667 810.666667 810.666667 750.506667 572.16 512z" p-id="1142"></path></svg>
@@ -46,16 +50,76 @@
         </a-col>
       </a-row>
       <template v-if="!hidden&&pickValue.properties && !isArray">
-        <json-schema-editor  v-for="(item,key,index) in pickValue.properties" :value="{[key]:item}" :parent="pickValue" :key="index" :deep="deep+1" :root="false" class="children"/>
+        <json-schema-editor  v-for="(item,key,index) in pickValue.properties" :value="{[key]:item}" :parent="pickValue" :key="index" :deep="deep+1" :root="false" class="children" :lang="lang" :custom="custom"/>
       </template>
       <template v-if="isArray">
-        <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem :root="false" class="children"/>
+        <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem :root="false" class="children" :lang="lang" :custom="custom"/>
       </template>
+      <a-modal v-model="modalVisible" :title="local['adv_setting']" :maskClosable="false" :okText="local['ok']" :cancelText="local['cancel']" width="800px" @ok="handleOk" dialogClass="json-schema-editor-advanced-modal">
+        <h3 v-text="local['base_setting']">基础设置</h3>
+        <a-form v-model="advancedValue" class="ant-advanced-search-form">
+          <a-row :gutter="6">
+            <a-col :span="8" v-for="(item,key) in advancedValue" :key="key">
+              <a-form-item>
+                <span>{{ local[key] }}</span>
+                <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'" style="width:100%" :placeholder="key"/>
+                <a-input-number v-model="advancedValue[key]" v-else-if="advancedAttr[key].type === 'number'" style="width:100%" :placeholder="key"/>
+                <span v-else-if="advancedAttr[key].type === 'boolean'" style="display:inline-block;width:100%">
+                  <a-switch v-model="advancedValue[key]"/>
+                </span>
+                <a-select v-else-if="advancedAttr[key].type === 'array'" v-model="advancedValue[key]" style="width:100%" :getPopupContainer="
+                triggerNode => {
+                  return triggerNode.parentNode || document.body;
+                }"
+                 :placeholder="local[key]"
+                > 
+                  <a-select-option value="">{{ local['nothing'] }}</a-select-option>
+                  <a-select-option :key="t" v-for="t in advancedAttr[key].enums">
+                    {{t}}
+                  </a-select-option>
+                </a-select>
+                
+                <a-input v-model="advancedValue[key]" v-else style="width:100%" :placeholder="key"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+        <h3 v-text="local['add_custom']" v-show="custom">添加自定义属性</h3>
+        <a-form class="ant-advanced-search-form" v-show="custom">
+          <a-row :gutter="6">
+            <a-col :span="8" v-for="item in customProps" :key="item.key">
+              <a-form-item :label="item.key">
+                <a-input v-model="item.value" style="width:calc(100% - 30px)"/>
+                <a-button icon="close" type="link" @click="customProps.splice(customProps.indexOf(item),1)" style="width:30px"></a-button>  
+              </a-form-item>
+            </a-col>
+            <a-col :span="8" v-show="addProp.key != undefined">
+              <a-form-item>
+                <a-input slot="label" v-model="addProp.key" style="width:100px"/>
+                <a-input v-model="addProp.value" style="width:100%"/>
+              </a-form-item>
+            </a-col>
+            <a-col :span="8">
+              <a-form-item>
+                <a-button icon="check" type="link" @click="confirmAddCustomNode" v-if="customing"></a-button>  
+                <a-tooltip :title="local['add_custom']" v-else>
+                  <a-button icon="plus" type="link" @click="addCustomNode"></a-button>  
+                </a-tooltip>
+              </a-form-item>
+            </a-col>
+          </a-row> 
+        </a-form>
+        <h3 v-text="local['preview']">预览</h3>
+        <pre style="width:100%">{{completeNodeValue}}</pre>
+      </a-modal>
   </div>
 </template>
 <script>
-import TYPE from './type/type'
-import { Row,Col,Button,Input, Icon,Checkbox,Select,Tooltip } from 'ant-design-vue'
+import { isNull } from './util'
+import {TYPE_NAME, TYPE} from './type/type'
+import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,Form,Switch} from 'ant-design-vue'
+
+import LocalProvider from './LocalProvider'
 export default {
   name:'JsonSchemaEditor',
   components: {
@@ -63,11 +127,15 @@ export default {
     AButton: Button,
     // eslint-disable-next-line vue/no-unused-components
     AIcon: Icon,
-    AInput: Input,
+    AInput: Input,AInputNumber:InputNumber,
     ACheckbox: Checkbox,
     ASelect: Select,
     ASelectOption:Select.Option,
     ATooltip: Tooltip,
+    AModal:Modal,
+    AForm:Form,
+    AFormItem: Form.Item,
+    ASwitch: Switch
   },
   props:{
     value: {
@@ -75,6 +143,10 @@ export default {
       required:true
     },
     disabled: { //name不可编辑，根节点name不可编辑,数组元素name不可编辑
+      type: Boolean,
+      default: false
+    },
+    disabledType: { //禁用类型选择
       type: Boolean,
       default: false
     },
@@ -93,6 +165,14 @@ export default {
     parent: { //父节点
       type: Object,
       default: null
+    },
+    custom: { //enable custom properties
+      type: Boolean,
+      default: false
+    },
+    lang: { // i18n language
+      type: String,
+      default: 'zh_CN'
     }
   },
   computed: {
@@ -110,13 +190,39 @@ export default {
     },
     checked(){
       return this.parent && this.parent.required && this.parent.required.indexOf(this.pickKey) >= 0
+    },
+    advanced(){
+      return TYPE[this.pickValue.type]
+    },
+    advancedAttr(){
+      return TYPE[this.pickValue.type].attr
+    },
+    advancedNotEmptyValue(){
+      const jsonNode = Object.assign({},this.advancedValue);
+      for(let key in jsonNode){
+        isNull(jsonNode[key]) && delete jsonNode[key]
+      }
+      return jsonNode
+    },
+    completeNodeValue(){
+      const t = {}
+      for(const item of this.customProps){
+        t[item.key] = item.value
+      }
+      return Object.assign({},this.pickValue,this.advancedNotEmptyValue, t)
     }
   },
   data(){
     return {
-      TYPE,
+      TYPE_NAME,
       hidden:false,
-      countAdd: 1
+      countAdd: 1,
+      modalVisible: false,
+      advancedValue:{},
+      addProp:{},// 自定义属性
+      customProps: [],
+      customing: false,
+      local: LocalProvider(this.lang)
     }
   },
   methods: {
@@ -135,6 +241,7 @@ export default {
     },
     onChangeType() {
       this.$delete(this.pickValue,'properties')
+      this.$delete(this.pickValue,'items')
       this.$delete(this.pickValue,'required')
       if(this.isArray){
         this.$set(this.pickValue,'items',{type:'string'})
@@ -177,6 +284,16 @@ export default {
       const props = node.properties
       this.$set(props,name,{type: type})
     },
+    addCustomNode(){
+      this.$set(this.addProp,'key',this._joinName())
+      this.$set(this.addProp,'value','')
+      this.customing = true
+    },
+    confirmAddCustomNode() {
+      this.customProps.push(this.addProp)
+      this.addProp = {}
+      this.customing = false
+    },
     removeNode(){
       const { properties,required } = this.parent 
       this.$delete(properties,this.pickKey)
@@ -188,6 +305,27 @@ export default {
     },
     _joinName(){
       return  `feild_${this.deep}_${this.countAdd++}`
+    },
+    onSetting(){
+      this.modalVisible = true
+      this.advancedValue = this.advanced.value
+      for(const k in this.advancedValue) {
+        if(this.pickValue[k]) this.advancedValue[k] = this.pickValue[k]
+      }
+    },
+
+    handleOk(){
+      this.modalVisible = false
+      for(const key in this.advancedValue){
+        if(isNull(this.advancedValue[key])){
+          this.$delete(this.pickValue,key)
+        }else {
+          this.$set(this.pickValue,key,this.advancedValue[key])
+        }
+      }
+      for(const item of this.customProps){
+        this.$set(this.pickValue,item.key,item.value)
+      }
     }
   }
 }
@@ -217,13 +355,45 @@ export default {
     }
     .setting-icon{
       color:rgba(0,0,0,.45);
+      border:none
     }
     .plus-icon{
-      color:#5B8FF9;
+      border:none
     }
     .close-icon{
-      color:#E8684A
+      color:#888;
+      border:none
     }
   }
+  
 }
+</style>
+<style lang="less">
+.json-schema-editor-advanced-modal{
+    color: rgba(0,0,0,.65);
+    min-width:600px;
+    pre {
+      font-family: monospace;
+      height: 100%;
+      overflow-y: auto;
+      border:1px solid rgba(0,0,0,.1);
+      border-radius: 4px;
+      padding: 12px;
+      width:50%
+    }
+    h3{
+      display: block;
+      border-left: 3px solid #1890ff;
+      padding:0 8px;
+    }
+    .ant-advanced-search-form {
+      .ant-form-item {
+        display: flex;
+        .ant-form-item-control-wrapper {
+          flex: 1;
+        }
+      }
+    }
+
+  }
 </style>

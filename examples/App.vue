@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <pre>{{tree}}</pre>
-      <json-schema-editor class="schema" :value="tree"/>
+      <json-schema-editor class="schema" :value="tree" disabledType lang="zh_CN" custom/>
     </div>
   </div>
 </template>
@@ -17,10 +17,33 @@ export default {
     return {
       tree:
       {
-        root: {
-          type: "object"
-        }
+  "root": {
+    "type": "object",
+    "title": "条件",
+    "properties": {
+      "name": {
+        "type": "string",
+        "title": "名称",
+        "maxLength": 10,
+        "minLength": 2
+      },
+      "appId": {
+        "type": "integer",
+        "title": "应用ID"
+      },
+      "credate": {
+        "type": "string",
+        "title": "创建日期",
+        "format": "date"
       }
+    },
+    "required": [
+      "name",
+      "appId",
+      "credate"
+    ]
+  }
+}
     }
   }
 }
@@ -44,10 +67,10 @@ export default {
   width:80vw;
   min-width:800px;
   justify-content:center;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 150px);
   margin:auto;
 }
-pre {
+.container>pre {
   font-family: monospace;
   height: 100%;
   overflow-y: auto;
