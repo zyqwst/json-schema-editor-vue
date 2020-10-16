@@ -81,3 +81,4 @@ Don't forget to star if it helped!
 ### Links
 
 - [json-schema-editor-visual](https://github.com/YMFE/json-schema-editor-visual)
+- [vue-json-schema-editor-visual](https://github.com/giscafer/vue-json-schema-editor-visual)
