@@ -330,70 +330,65 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.json-schema-editor{
-  .row{
-    display: flex;
-    margin:12px;
-    .ant-col-name{
-      display:flex;
-      align-items:center;
-       .ant-col-name-c{
-         display: flex;
-         align-items: center;
-       }
-      .ant-col-name-required{
-      flex:0 0 24px;
-      text-align:center;
-      }
-    }
-    .ant-col-type{
-      width: 100%;
-    }
-    .ant-col-setting{
-      display: inline-block;
-    }
-    .setting-icon{
-      color:rgba(0,0,0,.45);
-      border:none
-    }
-    .plus-icon{
-      border:none
-    }
-    .close-icon{
-      color:#888;
-      border:none
-    }
-  }
-  
+<style scoped>
+.json-schema-editor .row {
+  display: flex;
+  margin: 12px;
+}
+.json-schema-editor .row .ant-col-name {
+  display: flex;
+  align-items: center;
+}
+.json-schema-editor .row .ant-col-name .ant-col-name-c {
+  display: flex;
+  align-items: center;
+}
+.json-schema-editor .row .ant-col-name .ant-col-name-required {
+  flex: 0 0 24px;
+  text-align: center;
+}
+.json-schema-editor .row .ant-col-type {
+  width: 100%;
+}
+.json-schema-editor .row .ant-col-setting {
+  display: inline-block;
+}
+.json-schema-editor .row .setting-icon {
+  color: rgba(0, 0, 0, 0.45);
+  border: none;
+}
+.json-schema-editor .row .plus-icon {
+  border: none;
+}
+.json-schema-editor .row .close-icon {
+  color: #888;
+  border: none;
 }
 </style>
-<style lang="less">
-.json-schema-editor-advanced-modal{
-    color: rgba(0,0,0,.65);
-    min-width:600px;
-    pre {
-      font-family: monospace;
-      height: 100%;
-      overflow-y: auto;
-      border:1px solid rgba(0,0,0,.1);
-      border-radius: 4px;
-      padding: 12px;
-      width:50%
-    }
-    h3{
-      display: block;
-      border-left: 3px solid #1890ff;
-      padding:0 8px;
-    }
-    .ant-advanced-search-form {
-      .ant-form-item {
-        display: flex;
-        .ant-form-item-control-wrapper {
-          flex: 1;
-        }
-      }
-    }
+<style>
+.json-schema-editor-advanced-modal {
+  color: rgba(0, 0, 0, 0.65);
+  min-width: 600px;
+}
+.json-schema-editor-advanced-modal pre {
+  font-family: monospace;
+  height: 100%;
+  overflow-y: auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 12px;
+  width: 50%;
+}
+.json-schema-editor-advanced-modal h3 {
+  display: block;
+  border-left: 3px solid #1890ff;
+  padding: 0 8px;
+}
+.json-schema-editor-advanced-modal .ant-advanced-search-form .ant-form-item {
+  display: flex;
+}
+.json-schema-editor-advanced-modal .ant-advanced-search-form .ant-form-item .ant-form-item-control-wrapper {
+  flex: 1;
+}
 
-  }
 </style>

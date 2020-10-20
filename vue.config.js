@@ -7,15 +7,15 @@ module.exports = {
             template: 'public/index.html',
             filename: 'index.html'
         }
-    },
-    css: {
-        loaderOptions: {
-            less: {
-                lessOptions: { 
-                    // important extra layer for less-loader^6.0.0
-                    javascriptEnabled: true
-                }
-            }
-        }
     }
+    // css: {
+    //     loaderOptions: {
+    //         less: {
+    //             lessOptions: { 
+    //                 // important extra layer for less-loader^6.0.0
+    //                 javascriptEnabled: true
+    //             }
+    //         }
+    //     }
+    // }
 }
