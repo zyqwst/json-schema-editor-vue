@@ -238,6 +238,11 @@ export default {
         }
       }
       this.$set(this.parent,'properties',p)
+      // 删掉无效的required
+      const requireds = this.parent.required
+      if(requireds && requireds.length > 0) {
+        this.$set(this.parent,'required', requireds.filter(item => p[item]))
+      }
     },
     onChangeType() {
       this.$delete(this.pickValue,'properties')
