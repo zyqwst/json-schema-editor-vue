@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img width="60" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/logo.png">
+  <img width="60" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/logo.png">
 </p>
 <h1 align="center">
   <a href="http://json-schema.sviip.com/" target="_blank">json-schema-editor-vue</a>
@@ -16,12 +16,12 @@
 
 A json-schema editor of high efficient and easy-to-use, base on Vue
 <p align="center">
-  <img width="100%" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/capture.png">
+  <img width="100%" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/capture.png">
 </p>
 
 **支持自定义属性，满足特殊的需求**
 <p align="center">
-  <img width="100%" src="https://gitee.com/hz8866/json-schema-editor-vue/raw/master/examples/assets/custom.png">
+  <img width="100%" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/custom.png">
 </p>
 
 ### Example
