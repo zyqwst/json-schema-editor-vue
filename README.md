@@ -1,7 +1,3 @@
-
-<p align="center">
-  <img width="60" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/logo.png">
-</p>
 <h1 align="center">
   <a href="http://json-schema.sviip.com/" target="_blank">json-schema-editor-vue</a>
 </h1>
