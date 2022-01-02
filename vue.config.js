@@ -7,6 +7,10 @@ module.exports = {
             template: 'public/index.html',
             filename: 'index.html'
         }
+    },
+    devServer: {
+        // development server port 8000
+        port: 8080
     }
     // css: {
     //     loaderOptions: {

@@ -55,7 +55,7 @@
       <template v-if="isArray">
         <json-schema-editor  :value="{items:pickValue.items}" :deep="deep+1" disabled isItem :root="false" class="children" :lang="lang" :custom="custom"/>
       </template>
-      <a-modal v-model="modalVisible" :title="local['adv_setting']" :maskClosable="false" :okText="local['ok']" :cancelText="local['cancel']" width="800px" @ok="handleOk" dialogClass="json-schema-editor-advanced-modal">
+      <a-modal v-model="modalVisible" v-if="modalVisible" :title="local['adv_setting']" :maskClosable="false" :okText="local['ok']" :cancelText="local['cancel']" width="800px" @ok="handleOk" dialogClass="json-schema-editor-advanced-modal">
         <h3 v-text="local['base_setting']">基础设置</h3>
         <a-form v-model="advancedValue" class="ant-advanced-search-form">
           <a-row :gutter="6">
@@ -101,7 +101,7 @@
             </a-col>
             <a-col :span="8">
               <a-form-item>
-                <a-button icon="check" type="link" @click="confirmAddCustomNode" v-if="customing"></a-button>  
+                <a-button icon="check" type="link" @click="confirmAddCustomNode(null)" v-if="customing"></a-button>  
                 <a-tooltip :title="local['add_custom']" v-else>
                   <a-button icon="plus" type="link" @click="addCustomNode"></a-button>  
                 </a-tooltip>
@@ -115,11 +115,12 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import { isNull } from './util'
 import {TYPE_NAME, TYPE} from './type/type'
 import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,Form,Switch} from 'ant-design-vue'
-
 import LocalProvider from './LocalProvider'
+Modal.install(Vue)
 export default {
   name:'JsonSchemaEditor',
   components: {
@@ -226,28 +227,37 @@ export default {
     }
   },
   methods: {
+    parseCustomProps () {
+      const ownProps = [ 'type', 'title', 'properties', 'items', ...Object.keys(this.advancedAttr)]
+      Object.keys(this.pickValue).forEach(key => {
+        ownProps.indexOf(key) === -1 && this.confirmAddCustomNode({ key: key, value: this.pickValue[key] })
+      })
+    },
     onInputName(e){
-      const val = e.target.value
-      const p = {};
-      for(let key in this.parent.properties){
-        if(key != this.pickKey){
-          p[key] = this.parent.properties[key]
-        }else{
-          p[val] = this.parent.properties[key]
-          delete this.parent.properties[key]
-        }
-      }
-      this.$set(this.parent,'properties',p)
-      // 删掉无效的required
-      const requireds = this.parent.required
-      if(requireds && requireds.length > 0) {
-        this.$set(this.parent,'required', requireds.filter(item => p[item]))
+      const oldKey = this.pickKey
+      const newKey = e.target.value
+      if(oldKey === newKey) return
+
+      const nodeValue = this.parent.properties[oldKey]
+
+      // 替换key名
+      this.$delete(this.parent.properties, oldKey)
+      this.$set(this.parent.properties, newKey, nodeValue)
+
+      // required重新设置
+      const requireds = this.parent.required || []
+      const oldIndex = requireds.indexOf(oldKey)
+      if(requireds.length > 0 && oldIndex > -1) {
+        requireds.splice(oldIndex, 1)
+        requireds.push(newKey)
+        this.$set(this.parent,'required', [...new Set(requireds)])
       }
     },
     onChangeType() {
       this.$delete(this.pickValue,'properties')
       this.$delete(this.pickValue,'items')
       this.$delete(this.pickValue,'required')
+      this.$delete(this.pickValue,'format')
       if(this.isArray){
         this.$set(this.pickValue,'items',{type:'string'})
       }
@@ -256,8 +266,7 @@ export default {
       this._checked(e.target.checked,this.parent)
     },
     onRootCheck(e){
-     const checked = e.target.checked
-     this._deepCheck(checked,this.pickValue)
+     this._deepCheck( e.target.checked,this.pickValue)
     },
     _deepCheck(checked,node){
       if(node.type === 'object' && node.properties){
@@ -294,8 +303,9 @@ export default {
       this.$set(this.addProp,'value','')
       this.customing = true
     },
-    confirmAddCustomNode() {
-      this.customProps.push(this.addProp)
+    confirmAddCustomNode(prop) {
+      const p = prop || this.addProp
+      this.customProps.push(p)
       this.addProp = {}
       this.customing = false
     },
@@ -309,7 +319,7 @@ export default {
       }      
     },
     _joinName(){
-      return  `feild_${this.deep}_${this.countAdd++}`
+      return  `field_${this.deep}_${this.countAdd++}`
     },
     onSetting(){
       this.modalVisible = true
@@ -317,6 +327,7 @@ export default {
       for(const k in this.advancedValue) {
         if(this.pickValue[k]) this.advancedValue[k] = this.pickValue[k]
       }
+      this.parseCustomProps()
     },
 
     handleOk(){
