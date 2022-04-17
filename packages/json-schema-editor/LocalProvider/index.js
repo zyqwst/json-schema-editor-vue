@@ -72,7 +72,7 @@ const langs = {
 		'checked_all': '全选',
 		'valid_json': '不是合法的json字符串',
 		'enum': '枚举',
-		'enum_msg': '每行只能写一个值',
+		'enum_msg': '每行写一个值',
 		'enum_desc': '备注',
 		'enum_desc_msg': '备注描述信息',
 		'required': '是否必须',

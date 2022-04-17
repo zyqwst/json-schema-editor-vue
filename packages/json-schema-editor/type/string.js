@@ -4,7 +4,7 @@ const value = {
     minLength: null,
     pattern: null,
     format:undefined,
-    enum:[]
+    enum:undefined
 }
 const attr = {
     description: {
