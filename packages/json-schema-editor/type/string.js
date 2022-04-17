@@ -3,7 +3,8 @@ const value = {
     maxLength: null,
     minLength: null,
     pattern: null,
-    format:null
+    format:undefined,
+    enum:[]
 }
 const attr = {
     description: {
@@ -26,6 +27,10 @@ const attr = {
         name:'格式',
         type:'array',
         enums:['date','date-time','email','hostname','ipv4','ipv6','uri']
+    },
+    enum:{
+        name:'枚举',
+        type:'array'
     }
 }
 const wrapper = {value, attr}

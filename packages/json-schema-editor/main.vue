@@ -62,11 +62,11 @@
             <a-col :span="8" v-for="(item,key) in advancedValue" :key="key">
               <a-form-item>
                 <span>{{ local[key] }}</span>
-                <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer'" style="width:100%" :placeholder="key"/>
-                <a-input-number v-model="advancedValue[key]" v-else-if="advancedAttr[key].type === 'number'" style="width:100%" :placeholder="key"/>
+                <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer' || advancedAttr[key].type === 'number'" style="width:100%" :placeholder="key"/>
                 <span v-else-if="advancedAttr[key].type === 'boolean'" style="display:inline-block;width:100%">
                   <a-switch v-model="advancedValue[key]"/>
                 </span>
+                <a-textarea @blur="changeEnumValue" :value="advancedValue['enum'] && advancedValue['enum'].length && advancedValue['enum'].join('\n')" :rows="2" v-else-if="key === 'enum'" ></a-textarea>
                 <a-select v-else-if="advancedAttr[key].type === 'array'" v-model="advancedValue[key]" style="width:100%" :getPopupContainer="
                 triggerNode => {
                   return triggerNode.parentNode || document.body;
@@ -78,7 +78,6 @@
                     {{t}}
                   </a-select-option>
                 </a-select>
-                
                 <a-input v-model="advancedValue[key]" v-else style="width:100%" :placeholder="key"/>
               </a-form-item>
             </a-col>
@@ -128,7 +127,7 @@ export default {
     AButton: Button,
     // eslint-disable-next-line vue/no-unused-components
     AIcon: Icon,
-    AInput: Input,AInputNumber:InputNumber,
+    AInput: Input,AInputNumber:InputNumber,ATextarea: Input.TextArea,
     ACheckbox: Checkbox,
     ASelect: Select,
     ASelectOption:Select.Option,
@@ -254,10 +253,19 @@ export default {
       }
     },
     onChangeType() {
+      this.parseCustomProps()
+      // 删除自定义属性
+      this.customProps.forEach(item => {
+        this.$delete(this.pickValue, item.key)
+      });
+      this.customProps = [];
+
       this.$delete(this.pickValue,'properties')
       this.$delete(this.pickValue,'items')
       this.$delete(this.pickValue,'required')
       this.$delete(this.pickValue,'format')
+      this.$delete(this.pickValue,'enum')
+
       if(this.isArray){
         this.$set(this.pickValue,'items',{type:'string'})
       }
@@ -267,6 +275,16 @@ export default {
     },
     onRootCheck(e){
      this._deepCheck( e.target.checked,this.pickValue)
+    },
+    changeEnumValue (e) {
+      const pickType = this.pickValue.type
+      const value = e.target.value
+      var arr = value.split('\n')
+      if (arr.length === 0 || (arr.length == 1 && !arr[0])) {
+        this.$delete(this.advancedValue, 'enum')
+      } else {
+        this.advancedValue.enum = arr.map(item => pickType === 'string' ? item : +item)
+      }
     },
     _deepCheck(checked,node){
       if(node.type === 'object' && node.properties){
@@ -323,7 +341,7 @@ export default {
     },
     onSetting(){
       this.modalVisible = true
-      this.advancedValue = this.advanced.value
+      this.advancedValue = { ...this.advanced.value }
       for(const k in this.advancedValue) {
         if(this.pickValue[k]) this.advancedValue[k] = this.pickValue[k]
       }

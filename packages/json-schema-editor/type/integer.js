@@ -3,7 +3,8 @@ const value = {
     maximum: null,
     minimum: null,
     exclusiveMaximum:null,
-    exclusiveMinimum:null
+    exclusiveMinimum:null,
+    enum:[]
 }
 const attr = {
     description: {
@@ -25,6 +26,10 @@ const attr = {
     exclusiveMinimum:{
         name:'不包含最小值',
         type:'boolean'
+    },
+    enum:{
+        name:'枚举',
+        type:'array'
     }
 }
 const wrapper = {value, attr}
