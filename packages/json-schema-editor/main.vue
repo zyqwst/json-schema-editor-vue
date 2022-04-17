@@ -341,7 +341,6 @@ export default {
     },
     onSetting(){
       this.modalVisible = true
-      console.info('t7', this.advanced.value, this.pickValue)
       this.advancedValue = { ...this.advanced.value }
       for(const k in this.advancedValue) {
         if(this.pickValue[k]) this.advancedValue[k] = this.pickValue[k]
