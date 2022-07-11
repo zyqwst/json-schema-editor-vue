@@ -66,7 +66,7 @@
                 <span v-else-if="advancedAttr[key].type === 'boolean'" style="display:inline-block;width:100%">
                   <a-switch v-model="advancedValue[key]"/>
                 </span>
-                <a-textarea @blur="changeEnumValue" :value="advancedValue['enum'] && advancedValue['enum'].length && advancedValue['enum'].join('\n')" :rows="2" v-else-if="key === 'enum'" :placeholder="local['enum_msg']"></a-textarea>
+                <a-textarea @blur="changeEnumValue" :value="enumText" :rows="2" v-else-if="key === 'enum'" :placeholder="local['enum_msg']"></a-textarea>
                 <a-select v-else-if="advancedAttr[key].type === 'array'" v-model="advancedValue[key]" style="width:100%" :getPopupContainer="
                 triggerNode => {
                   return triggerNode.parentNode || document.body;
@@ -210,6 +210,12 @@ export default {
         t[item.key] = item.value
       }
       return Object.assign({},this.pickValue,this.advancedNotEmptyValue, t)
+    },
+    enumText () {
+      const t = this.advancedValue['enum']
+      if (!t) return ''
+      if (!t.length) return ''
+      return t.join('\n')
     }
   },
   data(){
@@ -280,8 +286,16 @@ export default {
       const pickType = this.pickValue.type
       const value = e.target.value
       var arr = value.split('\n')
-      if (arr.length === 0) return
-      this.advancedValue.enum = arr.map(item => pickType === 'string' ? item : +item)
+
+      if (pickType === 'string') {
+        this.advancedValue.enum = arr.map(item => item);
+      } else {
+        if(arr.length ===0 || (arr.length === 1 && arr[0]=='')) {
+          this.advancedValue.enum = null
+        }else {
+          this.advancedValue.enum = arr.map(item => +item);
+        }
+      }
     },
     _deepCheck(checked,node){
       if(node.type === 'object' && node.properties){

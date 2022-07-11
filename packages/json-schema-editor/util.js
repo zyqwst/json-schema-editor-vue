@@ -15,9 +15,9 @@ export function copyAttr(source, target){
 export function isNull(ele){
   if(typeof ele==='undefined'){
     return true;
-  }else if(ele==null){
+  }else if(ele===null){
     return true;
-  }else if(ele==''){
+  }else if(ele===''){
     return true;
   }
   return false;

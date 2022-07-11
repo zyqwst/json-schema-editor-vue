@@ -11,11 +11,15 @@
 [![MIT License](https://img.shields.io/github/license/zyqwst/json-schema-editor-vue.svg)](https://github.com/zyqwst/json-schema-editor-vue/blob/master/LICENSE)
 
 A json-schema editor of high efficient and easy-to-use, base on Vue
+
+### [json-schema-editor of Vue3](https://github.com/zyqwst/-json-schema-editor-vue3)
+
 <p align="center">
   <img width="100%" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/capture.png">
 </p>
 
-**支持自定义属性，满足特殊的需求**
+**支持自定义属性，满足特殊的需求*
+
 <p align="center">
   <img width="100%" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/custom.png">
 </p>
@@ -27,7 +31,12 @@ A json-schema editor of high efficient and easy-to-use, base on Vue
 ### Usage
 
 ```bash
+```bash
+# vue2
 npm install json-schema-editor-vue
+# vue3 
+npm install json-schema-editor-vue3
+```
 ```
 
 ```vue
