@@ -233,7 +233,7 @@ export default {
   },
   methods: {
     parseCustomProps () {
-      const ownProps = [ 'type', 'title', 'properties', 'items', ...Object.keys(this.advancedAttr)]
+      const ownProps = [ 'type', 'title', 'properties', 'items','required', ...Object.keys(this.advancedAttr)]
       Object.keys(this.pickValue).forEach(key => {
         ownProps.indexOf(key) === -1 && this.confirmAddCustomNode({ key: key, value: this.pickValue[key] })
       })
