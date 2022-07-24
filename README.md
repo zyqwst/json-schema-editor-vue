@@ -12,7 +12,7 @@
 
 A json-schema editor of high efficient and easy-to-use, base on Vue
 
-### 如果你使用Vue3,请查看 [json-schema-editor base on Vue3](https://github.com/zyqwst/-json-schema-editor-vue3)
+### 如果你使用Vue3,请查看 [json-schema-editor base on Vue3](https://github.com/zyqwst/json-schema-editor-vue3)
 
 <p align="center">
   <img width="100%" src="https://github.com/zyqwst/json-schema-editor-vue/raw/master/examples/assets/capture.png">
