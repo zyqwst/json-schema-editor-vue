@@ -89,7 +89,7 @@
             <a-col :span="8" v-for="item in customProps" :key="item.key">
               <a-form-item :label="item.key">
                 <a-input v-model="item.value" style="width:calc(100% - 30px)"/>
-                <a-button icon="close" type="link" @click="customProps.splice(customProps.indexOf(item),1)" style="width:30px"></a-button>  
+                <a-button icon="close" type="link" @click="removeCustomNode(item.key)" style="width:30px"></a-button>  
               </a-form-item>
             </a-col>
             <a-col :span="8" v-show="addProp.key != undefined">
@@ -197,6 +197,9 @@ export default {
     advancedAttr(){
       return TYPE[this.pickValue.type].attr
     },
+    ownProps () {
+      return [ 'type', 'title', 'properties', 'items','required', ...Object.keys(this.advancedAttr)]
+    },
     advancedNotEmptyValue(){
       const jsonNode = Object.assign({},this.advancedValue);
       for(let key in jsonNode){
@@ -206,10 +209,12 @@ export default {
     },
     completeNodeValue(){
       const t = {}
+      const basicValue = { ...this.pickValue }
       for(const item of this.customProps){
         t[item.key] = item.value
       }
-      return Object.assign({},this.pickValue,this.advancedNotEmptyValue, t)
+      this._pickDiffKey().forEach(key => delete basicValue[key])
+      return Object.assign({}, basicValue, t,this.advancedNotEmptyValue)
     },
     enumText () {
       const t = this.advancedValue['enum']
@@ -232,12 +237,6 @@ export default {
     }
   },
   methods: {
-    parseCustomProps () {
-      const ownProps = [ 'type', 'title', 'properties', 'items','required', ...Object.keys(this.advancedAttr)]
-      Object.keys(this.pickValue).forEach(key => {
-        ownProps.indexOf(key) === -1 && this.confirmAddCustomNode({ key: key, value: this.pickValue[key] })
-      })
-    },
     onInputName(e){
       const oldKey = this.pickKey
       const newKey = e.target.value
@@ -327,13 +326,37 @@ export default {
       const props = node.properties
       this.$set(props,name,{type: type})
     },
+    parseCustomProps () {
+      const ownProps = this.ownProps
+      Object.keys(this.pickValue).forEach(key => {
+        if (ownProps.indexOf(key) === -1) {
+          this.confirmAddCustomNode({ key: key, value: this.pickValue[key] })
+          // this.$delete(this.pickValue,key)
+        }
+      })
+    },
     addCustomNode(){
       this.$set(this.addProp,'key',this._joinName())
       this.$set(this.addProp,'value','')
       this.customing = true
     },
+    removeCustomNode(key) {
+      this.customProps.forEach((item,index) => {
+        if (item.key === key) {
+          this.customProps.splice(index,1)
+          return
+        }
+      })
+    },
     confirmAddCustomNode(prop) {
       const p = prop || this.addProp
+      let existKey = false
+      this.customProps.forEach(item => {
+        if (item.key === prop.key) {
+          existKey = true
+        }
+      })
+      if (existKey) return
       this.customProps.push(p)
       this.addProp = {}
       this.customing = false
@@ -354,7 +377,9 @@ export default {
       this.modalVisible = true
       this.advancedValue = { ...this.advanced.value }
       for(const k in this.advancedValue) {
-        if(this.pickValue[k]) this.advancedValue[k] = this.pickValue[k]
+        if(this.pickValue[k]) {
+          this.advancedValue[k] = this.pickValue[k]
+        }
       }
       this.parseCustomProps()
     },
@@ -368,9 +393,15 @@ export default {
           this.$set(this.pickValue,key,this.advancedValue[key])
         }
       }
+      const diffKey = this._pickDiffKey()
+      diffKey.forEach(key => this.$delete(this.pickValue,key))
       for(const item of this.customProps){
         this.$set(this.pickValue,item.key,item.value)
       }
+    },
+    _pickDiffKey () {
+      const keys = Object.keys(this.pickValue)
+      return keys.filter(item => this.ownProps.indexOf(item) === -1)
     }
   }
 }
