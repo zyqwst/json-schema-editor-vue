@@ -28,7 +28,7 @@
           </a-select>
         </a-col>
         <a-col>
-          <a-input v-model="pickValue.title" class="ant-col-title" :placeholder="local['title']"/>
+          <a-input :value="pickValue.title" class="ant-col-title" :placeholder="local['title']" @blur="e => pickValue.title=e.target.value"/>
         </a-col>
         <a-col :span="6" class="ant-col-setting">
           <a-tooltip>
