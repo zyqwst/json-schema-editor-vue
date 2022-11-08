@@ -1,10 +1,11 @@
 <template>
   <div id="app">
     <div class="title">   
-      <a href="https://github.com/zyqwst/json-schema-editor-vue" target="_blank">json-schema-editor-vue</a> Preview
+      <a href="https://github.com/zyqwst/json-schema-editor-vue" target="_blank">json-schema-editor-vue</a>
+      <span class="version"> version：{{ version }}</span>
     </div>
     <div class="desc">
-      <div>A json-schema editor of high efficient and easy-to-use, base on Vue. 
+      <div>A json-schema editor of high efficient and easy-to-use, base on Vue.
         <a @click="visible = true">import json</a>
       </div>
     </div>
@@ -21,6 +22,7 @@
 </template>
 
 <script>
+var app = require("../package.json");
 import Codemirror  from './components/Codemirror.vue'
 import GenerateSchema from 'generate-schema'
 export default {
@@ -38,6 +40,7 @@ export default {
   },
   data() {
     return {
+      version: app.version,
       importJson: '',
       visible: false,
       tree:
@@ -93,6 +96,9 @@ export default {
   font-weight: bold;
   height:100px;
   line-height: 100px;
+}
+.version{
+  font-size: 16px;
 }
 .desc{
   padding:20px;
