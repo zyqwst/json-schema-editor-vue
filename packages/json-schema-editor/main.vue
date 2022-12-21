@@ -115,7 +115,7 @@
 </template>
 <script>
 import Vue from 'vue'
-import { isNull } from './util'
+import { isNull, renamePropertyAndKeepKeyPrecedence } from './util'
 import {TYPE_NAME, TYPE} from './type/type'
 import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,Form,Switch} from 'ant-design-vue'
 import LocalProvider from './LocalProvider'
@@ -242,11 +242,13 @@ export default {
       const newKey = e.target.value
       if(oldKey === newKey) return
 
-      const nodeValue = this.parent.properties[oldKey]
+      // const nodeValue = this.parent.properties[oldKey]
 
-      // 替换key名
-      this.$delete(this.parent.properties, oldKey)
-      this.$set(this.parent.properties, newKey, nodeValue)
+      // // 替换key名
+      // this.$delete(this.parent.properties, oldKey)
+      // this.$set(this.parent.properties, newKey, nodeValue)
+      const _this = this
+      renamePropertyAndKeepKeyPrecedence(_this, this.parent.properties,[ oldKey, newKey ])
 
       // required重新设置
       const requireds = this.parent.required || []
@@ -324,7 +326,7 @@ export default {
       const node = this.pickValue
       node.properties || this.$set(node,'properties',{})
       const props = node.properties
-      this.$set(props,name,{type: type})
+      this.$set(props,name,{type: type, title: ''})
     },
     parseCustomProps () {
       const ownProps = this.ownProps
