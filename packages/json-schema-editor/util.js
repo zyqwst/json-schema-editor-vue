@@ -29,7 +29,6 @@ export function renamePropertyAndKeepKeyPrecedence(_this, obj, [oldKey, newKey])
       .reduce((target, [key, descriptor]) => {
         if(key === '__ob__') return target
         // Reflect.deleteProperty(target, key)
-        console.info('TTT', target, key ,descriptor)
         _this.$delete(target, key)
         if (key === oldKey) {
           key = newKey

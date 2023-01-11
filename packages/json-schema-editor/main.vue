@@ -28,7 +28,7 @@
           </a-select>
         </a-col>
         <a-col>
-          <a-input :value="pickValue.title" class="ant-col-title" :placeholder="local['title']" @blur="e => pickValue.title=e.target.value"/>
+          <a-input :value="pickValue.title" class="ant-col-title" :placeholder="local['title']" @blur="onInputTitle"/>
         </a-col>
         <a-col :span="6" class="ant-col-setting">
           <a-tooltip>
@@ -258,6 +258,9 @@ export default {
         requireds.push(newKey)
         this.$set(this.parent,'required', [...new Set(requireds)])
       }
+    },
+    onInputTitle(e) {
+      this.$set(this.pickValue, 'title', e.target.value)
     },
     onChangeType() {
       this.parseCustomProps()
