@@ -289,6 +289,11 @@ export default {
     changeEnumValue (e) {
       const pickType = this.pickValue.type
       const value = e.target.value
+
+      if(!value || value===''){
+        this.advancedValue.enum = null
+        return
+      }
       var arr = value.split('\n')
 
       if (pickType === 'string') {
