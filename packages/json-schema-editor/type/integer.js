@@ -4,7 +4,7 @@ const value = {
     minimum: null,
     exclusiveMaximum:null,
     exclusiveMinimum:null,
-    enum:[]
+    enum:null
 }
 const attr = {
     description: {
