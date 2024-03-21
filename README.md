@@ -70,7 +70,9 @@ export default {
 ```
 
 ### 额外配置
-如果要对json schema增加额外的属性时可以使用extra参数配置额外属性，比如想要对integer和string增加default属性，支持的参数类型有：'string', 'number', 'integer','object', 'array',  'boolean'
+如果要对json schema增加额外的属性时可以使用extra参数配置额外属性，比如想要对integer和string增加default属性，支持的参数类型有：'string', 'number', 'integer','object', 'array',  'boolean'。
+
+![额外属性配置](./examples/assets/image.png)
 ```
 <json-schema-editor
   :value="tree"
@@ -125,7 +127,7 @@ data() {
   },
 ```
 ### json-schema-editor-vue属性说明如下：
-![额外属性配置](./examples/assets/image.png)
+
 |属性|说明|类型|是否必须|默认值|
 :-|:-|:-|:-|:-
 |value|传入一个默认的树节点，用来接收编辑后的json schema结果|Object|是||
