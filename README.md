@@ -125,7 +125,7 @@ data() {
   },
 ```
 ### json-schema-editor-vue属性说明如下：
-
+![额外属性配置](./examples/assets/image.png)
 |属性|说明|类型|是否必须|默认值|
 :-|:-|:-|:-|:-
 |value|传入一个默认的树节点，用来接收编辑后的json schema结果|Object|是||
