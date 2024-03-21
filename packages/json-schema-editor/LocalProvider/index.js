@@ -17,7 +17,7 @@ const langs = {
 		'cancel':'Cancel',
 		'minLength':'Min length',
 		'maxLength': 'Max length',
-		'pattern':'MUST be a valid regular expression.',
+		'pattern':'Must be a valid regular expression.',
 		'exclusiveMinimum': 'Value strictly less than',
 		'exclusiveMaximum':  'Value strictly more than',
 		'minimum': 'Min',

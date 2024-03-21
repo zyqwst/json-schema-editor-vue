@@ -61,7 +61,7 @@
           <a-row :gutter="6">
             <a-col :span="8" v-for="(item,key) in advancedValue" :key="key">
               <a-form-item>
-                <span>{{ local[key] }}</span>
+                <span>{{ advancedAttr[key].extra ? (lang=='en_US'? key : advancedAttr[key].name):local[key] }}</span>
                 <a-input-number v-model="advancedValue[key]" v-if="advancedAttr[key].type === 'integer' || advancedAttr[key].type === 'number'" style="width:100%" :placeholder="key"/>
                 <span v-else-if="advancedAttr[key].type === 'boolean'" style="display:inline-block;width:100%">
                   <a-switch v-model="advancedValue[key]"/>
@@ -115,7 +115,7 @@
 </template>
 <script>
 import Vue from 'vue'
-import { isNull, renamePropertyAndKeepKeyPrecedence } from './util'
+import { isNull, renamePropertyAndKeepKeyPrecedence, arrayDifference } from './util'
 import {TYPE_NAME, TYPE} from './type/type'
 import { Row,Col,Button,Input,InputNumber, Icon,Checkbox,Select,Tooltip,Modal,Form,Switch} from 'ant-design-vue'
 import LocalProvider from './LocalProvider'
@@ -173,6 +173,10 @@ export default {
     lang: { // i18n language
       type: String,
       default: 'zh_CN'
+    },
+    extra: { // 基础设置里追加的设置
+      type: Object,
+      default: null
     }
   },
   computed: {
@@ -236,7 +240,28 @@ export default {
       local: LocalProvider(this.lang)
     }
   },
+  mounted () {
+    this.init()
+  },
   methods: {
+    init(){
+      if (!this.extra || JSON.stringify(this.extra) === '{}') return
+
+      const keys = Object.keys(this.extra)
+      const nonCompliant = arrayDifference(TYPE_NAME, keys);
+      if (nonCompliant.length>0 ){
+        console.warn('not compliant extra，Supports only the following keys：string, number, integer,object, array,  boolean' ,nonCompliant);
+      }
+      for(let item in this.extra){
+        const setting = this.extra[item]
+        const basicSetting = TYPE[item]
+        Object.entries(setting).forEach(([key, value]) => {
+          value.extra=true
+          basicSetting.attr[key] = value
+          basicSetting.value[key] = null
+        });
+      }
+    },
     onInputName(e){
       const oldKey = this.pickKey
       const newKey = e.target.value
