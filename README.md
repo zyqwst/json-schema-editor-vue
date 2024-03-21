@@ -68,6 +68,62 @@ export default {
 }
 </script>
 ```
+
+### 额外配置
+如果要对json schema增加额外的属性时可以使用extra参数配置额外属性，比如想要对integer和string增加default属性，支持的参数类型有：'string', 'number', 'integer','object', 'array',  'boolean'
+```
+<json-schema-editor
+  :value="tree"
+  disabledType
+  lang="zh_CN"
+  custom
+  :extra="extraSetting"
+/>
+
+data() {
+    return {
+      extraSetting: {
+        integer: { // 对integer生效
+          default: {
+            name: "默认值",
+            type: "integer",
+          },
+        },
+        string: { // 对string类型生效
+          default: {
+            name: "默认值",
+            type: "integer", // default配置可输入的值类型
+          },
+        },
+      },
+      tree: {
+        root: {
+          type: "object",
+          title: "条件",
+          properties: {
+            name: {
+              type: "string",
+              title: "名称",
+              maxLength: 10,
+              minLength: 2,
+            },
+            appId: {
+              type: "integer",
+              title: "应用ID",
+              default: 3,
+            },
+            credate: {
+              type: "string",
+              title: "创建日期",
+              format: "date",
+            },
+          },
+          required: ["name", "appId", "credate"],
+        },
+      },
+    };
+  },
+```
 ### json-schema-editor-vue属性说明如下：
 
 |属性|说明|类型|是否必须|默认值|
@@ -78,6 +134,7 @@ export default {
 |root|是否是根节点|Boolean||`true`|
 |custom|是否允许添加自定义属性|Boolean||`false`|
 |lang|国际化(可选zh_CN和en_US)|String||`zh_CN`|
+|extra|额外配置属性|Object||null|
 
 Don't forget to star if it helped!
 如果对您有帮助，别忘记给个星哦
