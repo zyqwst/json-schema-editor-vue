@@ -49,7 +49,7 @@
           </a-tooltip>
         </a-col>
       </a-row>
-      <template v-if="!hidden&&pickValue.properties && !isArray">
+      <template v-if="!hidden&&pickValue&&pickValue.properties && !isArray">
         <json-schema-editor  v-for="(item,key,index) in pickValue.properties" :value="{[key]:item}" :parent="pickValue" :key="index" :deep="deep+1" :root="false" class="children" :lang="lang" :custom="custom"/>
       </template>
       <template v-if="isArray">
@@ -181,7 +181,7 @@ export default {
   },
   computed: {
     pickValue(){
-      return  Object.values(this.value)[0]
+      return  Object.values(this.value)[0]||{}
     },
     pickKey(){
       return  Object.keys(this.value)[0]
